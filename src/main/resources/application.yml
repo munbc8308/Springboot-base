@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Lica
+  profiles:
+    active: local
+
+# SSO Configuration
+sso:
+  issuer: http://localhost:8080
+  token:
+    access-token-expiration: 3600000      # 1 hour
+    refresh-token-expiration: 86400000    # 24 hours
+  key:
+    store-path: ./data/keys

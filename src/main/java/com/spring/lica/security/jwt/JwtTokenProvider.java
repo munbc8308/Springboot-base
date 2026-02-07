@@ -1,51 +1,62 @@
 package com.spring.lica.security.jwt;
 
+import com.spring.lica.security.jwk.RsaKeyProvider;
+import com.spring.lica.sso.SsoProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
 
-	private final SecretKey key;
-	private final long expiration;
+	private final RSAPrivateKey privateKey;
+	private final RSAPublicKey publicKey;
+	private final String kid;
+	private final String issuer;
+	private final long accessTokenExpiration;
 
-	public JwtTokenProvider(JwtProperties properties) {
-		this.key = Keys.hmacShaKeyFor(properties.secret().getBytes(StandardCharsets.UTF_8));
-		this.expiration = properties.expiration();
+	public JwtTokenProvider(RsaKeyProvider rsaKeyProvider, SsoProperties ssoProperties) {
+		this.privateKey = rsaKeyProvider.getPrivateKey();
+		this.publicKey = rsaKeyProvider.getPublicKey();
+		this.kid = rsaKeyProvider.getKid();
+		this.issuer = ssoProperties.issuer();
+		this.accessTokenExpiration = ssoProperties.token().accessTokenExpiration();
 	}
 
-	public String generateToken(String username, List<String> roles) {
+	public String generateToken(String subject, List<String> roles) {
 		Date now = new Date();
-		Date expiryDate = new Date(now.getTime() + expiration);
+		Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
 
 		return Jwts.builder()
-			.subject(username)
+			.header().keyId(kid).and()
+			.issuer(issuer)
+			.subject(subject)
 			.claim("roles", roles)
+			.id(UUID.randomUUID().toString())
 			.issuedAt(now)
 			.expiration(expiryDate)
-			.signWith(key)
+			.signWith(privateKey)
 			.compact();
 	}
 
 	public Authentication getAuthentication(String token) {
 		Claims claims = Jwts.parser()
-			.verifyWith(key)
+			.verifyWith(publicKey)
 			.build()
 			.parseSignedClaims(token)
 			.getPayload();
 
-		String username = claims.getSubject();
+		String subject = claims.getSubject();
 
 		@SuppressWarnings("unchecked")
 		List<String> roles = claims.get("roles", List.class);
@@ -54,13 +65,13 @@ public class JwtTokenProvider {
 			.map(SimpleGrantedAuthority::new)
 			.toList();
 
-		return new UsernamePasswordAuthenticationToken(username, null, authorities);
+		return new UsernamePasswordAuthenticationToken(subject, null, authorities);
 	}
 
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parser()
-				.verifyWith(key)
+				.verifyWith(publicKey)
 				.build()
 				.parseSignedClaims(token);
 			return true;
