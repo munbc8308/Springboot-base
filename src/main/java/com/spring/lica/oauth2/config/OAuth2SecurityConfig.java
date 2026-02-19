@@ -32,6 +32,7 @@ public class OAuth2SecurityConfig {
 				.requestMatchers("/.well-known/**").permitAll()
 				.requestMatchers("/oauth2/login").permitAll()
 				.requestMatchers("/oauth2/register").permitAll()
+				.requestMatchers("/oauth2/signup").permitAll()
 				.requestMatchers("/oauth2/forgot-password").permitAll()
 				.requestMatchers("/oauth2/reset-password").permitAll()
 				.requestMatchers("/oauth2/verify-email").permitAll()

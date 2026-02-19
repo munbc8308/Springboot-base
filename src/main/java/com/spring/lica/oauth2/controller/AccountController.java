@@ -18,12 +18,12 @@ public class AccountController {
 
     // ── Registration ────────────────────────────────────────
 
-    @GetMapping("/oauth2/register")
+    @GetMapping("/oauth2/signup")
     public String registerPage() {
         return "oauth2-register";
     }
 
-    @PostMapping("/oauth2/register")
+    @PostMapping("/oauth2/signup")
     public String register(@RequestParam String username,
                            @RequestParam String email,
                            @RequestParam String password,

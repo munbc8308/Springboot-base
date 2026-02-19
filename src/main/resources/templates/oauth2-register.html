@@ -14,7 +14,7 @@
 
 			<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-			<form th:action="@{/oauth2/register}" method="post">
+			<form th:action="@{/oauth2/signup}" method="post">
 				<div class="form-group">
 					<label for="username">Username</label>
 					<input type="text" id="username" name="username" th:value="${username}" required="required" autofocus="autofocus" minlength="3"/>

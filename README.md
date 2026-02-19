@@ -553,8 +553,8 @@ OAuth 2.0 / OIDC 프로토콜:
 
 사용자 인증/계정 (UI):
   GET  /oauth2/login                  # 로그인 페이지
-  GET  /oauth2/register               # 회원가입 페이지
-  POST /oauth2/register               # 회원가입 처리
+  GET  /oauth2/signup                  # 회원가입 페이지
+  POST /oauth2/signup                  # 회원가입 처리
   GET  /oauth2/forgot-password         # 비밀번호 찾기 페이지
   POST /oauth2/forgot-password         # 비밀번호 찾기 처리
   GET  /oauth2/reset-password?token=   # 비밀번호 초기화 페이지
