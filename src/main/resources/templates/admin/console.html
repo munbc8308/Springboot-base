@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	<title>Admin Console - Lica</title>
+	<link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+	<nav class="navbar">
+		<h1>Lica Admin Console</h1>
+		<form th:action="@{/admin/logout}" method="post">
+			<button type="submit" class="btn-logout">Logout</button>
+		</form>
+	</nav>
+
+	<div class="console-wrapper">
+		<!-- Sidebar -->
+		<aside class="sidebar">
+			<ul class="sidebar-nav">
+				<li><a href="#dashboard" class="active" data-tab="dashboard"><span class="nav-icon">&#9632;</span> Dashboard</a></li>
+				<li><a href="#users" data-tab="users"><span class="nav-icon">&#9775;</span> Users</a></li>
+				<li><a href="#clients" data-tab="clients"><span class="nav-icon">&#9881;</span> Clients</a></li>
+				<li><a href="#sessions" data-tab="sessions"><span class="nav-icon">&#8987;</span> Sessions</a></li>
+				<li><a href="#events" data-tab="events"><span class="nav-icon">&#9776;</span> Events</a></li>
+				<li><a href="#idps" data-tab="idps"><span class="nav-icon">&#8644;</span> Identity Providers</a></li>
+			</ul>
+			<div class="sidebar-divider"></div>
+			<ul class="sidebar-nav">
+				<li><a th:href="@{/admin/settings}"><span class="nav-icon">&#9881;</span> Settings</a></li>
+			</ul>
+		</aside>
+
+		<!-- Main Content -->
+		<main class="console-main">
+
+			<!-- Dashboard Tab -->
+			<section id="tab-dashboard" class="tab-section active">
+				<h2 style="font-size:20px;font-weight:600;margin-bottom:20px;">Dashboard</h2>
+				<div class="stats-grid" id="stats-grid"></div>
+				<div class="section-card">
+					<div class="section-header">Recent Events</div>
+					<table class="data-table">
+						<thead>
+							<tr>
+								<th>Time</th>
+								<th>Type</th>
+								<th>User</th>
+								<th>Outcome</th>
+								<th>Details</th>
+							</tr>
+						</thead>
+						<tbody id="recent-events-body"></tbody>
+					</table>
+				</div>
+			</section>
+
+			<!-- Users Tab -->
+			<section id="tab-users" class="tab-section">
+				<div class="table-toolbar">
+					<h2>Users</h2>
+					<input type="text" class="search-input" id="user-search" placeholder="Search users..."/>
+				</div>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Status</th>
+							<th>MFA</th>
+							<th>Created</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="users-body"></tbody>
+				</table>
+				<div class="pagination" id="users-pagination"></div>
+			</section>
+
+			<!-- Clients Tab -->
+			<section id="tab-clients" class="tab-section">
+				<div class="table-toolbar">
+					<h2>OAuth Clients</h2>
+					<button class="btn btn-blue" id="btn-create-client">+ New Client</button>
+				</div>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Client ID</th>
+							<th>Name</th>
+							<th>Scopes</th>
+							<th>Status</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="clients-body"></tbody>
+				</table>
+			</section>
+
+			<!-- Sessions Tab -->
+			<section id="tab-sessions" class="tab-section">
+				<div class="table-toolbar">
+					<h2>Active Sessions</h2>
+				</div>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>Session ID</th>
+							<th>User ID</th>
+							<th>IP Address</th>
+							<th>Auth Time</th>
+							<th>Expires</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="sessions-body"></tbody>
+				</table>
+			</section>
+
+			<!-- Events Tab -->
+			<section id="tab-events" class="tab-section">
+				<div class="table-toolbar">
+					<h2>Audit Events</h2>
+				</div>
+				<div class="filter-bar">
+					<input type="text" class="search-input" id="event-type-filter" placeholder="Filter by event type..."/>
+					<input type="text" class="search-input" id="event-user-filter" placeholder="Filter by username..."/>
+					<button class="btn btn-blue" id="btn-filter-events">Apply</button>
+				</div>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>Time</th>
+							<th>Type</th>
+							<th>User</th>
+							<th>Client</th>
+							<th>IP</th>
+							<th>Outcome</th>
+							<th>Details</th>
+						</tr>
+					</thead>
+					<tbody id="events-body"></tbody>
+				</table>
+				<div class="pagination" id="events-pagination"></div>
+			</section>
+
+			<!-- Identity Providers Tab -->
+			<section id="tab-idps" class="tab-section">
+				<div class="table-toolbar">
+					<h2>Identity Providers</h2>
+					<button class="btn btn-blue" id="btn-create-idp">+ New Provider</button>
+				</div>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Alias</th>
+							<th>Type</th>
+							<th>Status</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="idps-body"></tbody>
+				</table>
+			</section>
+
+		</main>
+	</div>
+
+	<!-- Modal Container -->
+	<div class="modal-backdrop hidden" id="modal-backdrop">
+		<div class="modal" id="modal">
+			<div class="modal-header">
+				<h3 id="modal-title">Modal</h3>
+				<button class="modal-close" id="modal-close">&times;</button>
+			</div>
+			<div class="modal-body" id="modal-body"></div>
+			<div class="modal-footer">
+				<button class="btn-cancel" id="modal-cancel">Cancel</button>
+				<button class="btn-submit" id="modal-submit">Save</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Toast -->
+	<div class="toast hidden" id="toast"></div>
+
+	<script th:src="@{/js/admin-console.js}"></script>
+</body>
+</html>

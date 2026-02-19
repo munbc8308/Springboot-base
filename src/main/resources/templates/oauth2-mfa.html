@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>MFA Verification - Lica SSO</title>
+	<link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+	<div class="login-wrapper">
+		<div class="login-card">
+			<h1>Lica SSO</h1>
+			<p class="subtitle">Two-Factor Authentication</p>
+
+			<div style="margin-bottom: 1em; padding: 0.75em; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
+				Signed in as <strong th:text="${username}">user</strong>
+			</div>
+
+			<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+			<form th:action="@{/oauth2/mfa}" method="post" id="mfaForm">
+				<input type="hidden" name="type" id="mfaType" value="totp"/>
+
+				<div class="form-group">
+					<label for="code">Authentication Code</label>
+					<input type="text" id="code" name="code" autocomplete="one-time-code"
+						   pattern="[0-9a-z\-]*" maxlength="12"
+						   autofocus="autofocus" required="required"
+						   placeholder="Enter 6-digit code"/>
+				</div>
+
+				<button type="submit" class="btn-primary">Verify</button>
+			</form>
+
+			<div style="margin-top: 1.5em; text-align: center; border-top: 1px solid #eee; padding-top: 1em;">
+				<p style="font-size: 0.85em; color: #6c757d; margin-bottom: 0.5em;">
+					Can't access your authenticator app?
+				</p>
+				<button type="button" onclick="switchToRecovery()" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.9em;">
+					Use a recovery code
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function switchToRecovery() {
+			document.getElementById('mfaType').value = 'recovery';
+			document.getElementById('code').placeholder = 'Enter recovery code (e.g. abcd-efgh)';
+			document.getElementById('code').maxLength = 12;
+		}
+	</script>
+</body>
+</html>

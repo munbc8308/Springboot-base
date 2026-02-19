@@ -9,9 +9,12 @@
 <body>
 	<nav class="navbar">
 		<h1>Lica Settings</h1>
-		<form th:action="@{/admin/logout}" method="post">
-			<button type="submit" class="btn-logout">Logout</button>
-		</form>
+		<div style="display:flex;align-items:center;gap:12px;">
+			<a href="/admin/console" style="color:rgba(255,255,255,0.85);text-decoration:none;font-size:14px;border:1px solid rgba(255,255,255,0.3);border-radius:6px;padding:6px 16px;">Console</a>
+			<form th:action="@{/admin/logout}" method="post" style="margin:0;">
+				<button type="submit" class="btn-logout">Logout</button>
+			</form>
+		</div>
 	</nav>
 
 	<form th:action="@{/admin/settings}" method="post">

@@ -1,0 +1,15 @@
+services:
+  lica-sso:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SSO_ISSUER=http://localhost:8080
+      - SSO_KEY_STORE_PATH=/data/keys
+    volumes:
+      - lica-data:/data
+    restart: unless-stopped
+
+volumes:
+  lica-data:

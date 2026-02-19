@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:./data/licadb;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:/data/db/licadb;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -13,8 +13,11 @@ spring:
     show-sql: false
 
 sso:
-  issuer: https://sso.example.com
+  issuer: ${SSO_ISSUER:https://sso.example.com}
   key:
-    private-key-path: ./data/keys/private.pem
-    public-key-path: ./data/keys/public.pem
-    kid: lica-prod-key-1
+    store-path: ${SSO_KEY_STORE_PATH:/data/keys}
+
+logging:
+  level:
+    com.spring.lica: INFO
+    org.hibernate.SQL: WARN

@@ -29,6 +29,11 @@ public class AdminController {
 		return "login";
 	}
 
+	@GetMapping("/admin/console")
+	public String console() {
+		return "admin/console";
+	}
+
 	@GetMapping("/admin/settings")
 	public String settings(Model model) {
 		try {

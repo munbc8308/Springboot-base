@@ -1,5 +1,7 @@
 package com.spring.lica.security.jwt;
 
+import com.spring.lica.domain.repository.TokenBlacklistRepository;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final String BEARER_PREFIX = "Bearer ";
 
 	private final JwtTokenProvider jwtTokenProvider;
+	private final TokenBlacklistRepository tokenBlacklistRepository;
 
-	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
+								   TokenBlacklistRepository tokenBlacklistRepository) {
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.tokenBlacklistRepository = tokenBlacklistRepository;
 	}
 
 	@Override
@@ -31,8 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String token = resolveToken(request);
 
 		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			Claims claims = jwtTokenProvider.extractClaims(token);
+			String jti = claims.getId();
+
+			if (jti == null || !tokenBlacklistRepository.existsByJti(jti)) {
+				Authentication authentication = jwtTokenProvider.getAuthentication(token);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
 		}
 
 		filterChain.doFilter(request, response);

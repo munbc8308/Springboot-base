@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Authorize - Lica SSO</title>
+	<link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+	<div class="login-wrapper">
+		<div class="login-card">
+			<h1>Lica SSO</h1>
+			<p class="subtitle">Authorization Request</p>
+
+			<!-- Client logo -->
+			<div th:if="${client.logoUri}" style="text-align: center; margin-bottom: 1em;">
+				<img th:src="${client.logoUri}" alt="Client Logo"
+					 style="max-width: 80px; max-height: 80px; border-radius: 8px;"/>
+			</div>
+
+			<!-- Current user info -->
+			<div th:if="${principal}" style="margin-bottom: 1em; padding: 0.75em; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
+				Signed in as <strong th:text="${principal.username}">user</strong>
+			</div>
+
+			<div style="margin-bottom: 1.5em;">
+				<p><strong th:text="${client.clientName}">App Name</strong> is requesting access to your account.</p>
+			</div>
+
+			<div style="margin-bottom: 1.5em;">
+				<p><strong>Requested permissions:</strong></p>
+				<ul style="list-style: none; padding: 0;">
+					<li th:each="scope : ${scopes}" style="padding: 0.4em 0; border-bottom: 1px solid #eee;">
+						<span th:switch="${scope}">
+							<span th:case="'openid'">OpenID Connect - Verify your identity</span>
+							<span th:case="'profile'">Profile - Name, picture, and basic info</span>
+							<span th:case="'email'">Email - Your email address</span>
+							<span th:case="'phone'">Phone - Your phone number</span>
+							<span th:case="'address'">Address - Your mailing address</span>
+							<span th:case="*" th:text="${scope}">scope</span>
+						</span>
+					</li>
+				</ul>
+			</div>
+
+			<form th:action="@{/oauth2/authorize/consent}" method="post" style="display: flex; gap: 0.5em;">
+				<button type="submit" name="consent" value="approve" class="btn-primary" style="flex: 1;">Approve</button>
+				<button type="submit" name="consent" value="deny" class="btn-primary" style="flex: 1; background: #6c757d;">Deny</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

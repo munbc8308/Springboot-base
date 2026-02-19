@@ -1,8 +1,13 @@
+server:
+  shutdown: graceful
+
 spring:
   application:
     name: Lica
   profiles:
     active: local
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
 # SSO Configuration
 sso:
@@ -10,5 +15,11 @@ sso:
   token:
     access-token-expiration: 3600000      # 1 hour
     refresh-token-expiration: 86400000    # 24 hours
+    authorization-code-expiration: 300000 # 5 minutes
   key:
     store-path: ./data/keys
+  session:
+    idle-timeout: 1800000        # 30 minutes
+    absolute-timeout: 28800000   # 8 hours
+    max-concurrent-sessions: 5
+    cookie-name: LICA_SSO_SID

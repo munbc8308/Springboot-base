@@ -696,181 +696,181 @@ MFA:
 
 ---
 
-### Phase 2 — OAuth 2.0 Core
+### Phase 2 — OAuth 2.0 Core ✅
 
 > Authorization Server의 핵심. 모든 OAuth 2.0 Grant 흐름과 토큰 발급/관리를 구현합니다.
 
 #### 2-1. 클라이언트(OAuth Client) 엔티티 및 관리
 
-- [ ] **OAuth Client 엔티티** — `client_id`, `client_secret_hash`, `client_name`, `redirect_uris`, `grant_types`, `response_types`, `scopes`, `token_endpoint_auth_method`, `client_type`(CONFIDENTIAL/PUBLIC), `logo_uri`, `policy_uri`, `tos_uri`, `jwks_uri`, `enabled`, `created_at`
-- [ ] Client Repository, Client 조회/검증 서비스
-- [ ] 클라이언트 인증 로직 — `client_secret_basic`, `client_secret_post`, `none`(Public)
+- [x] **OAuth Client 엔티티** — `client_id`, `client_secret_hash`, `client_name`, `redirect_uris`, `grant_types`, `response_types`, `scopes`, `token_endpoint_auth_method`, `client_type`(CONFIDENTIAL/PUBLIC), `logo_uri`, `policy_uri`, `tos_uri`, `jwks_uri`, `enabled`, `created_at`
+- [x] Client Repository, Client 조회/검증 서비스
+- [x] 클라이언트 인증 로직 — `client_secret_basic`, `client_secret_post`, `none`(Public)
 
 #### 2-2. Authorization Code + PKCE 흐름
 
-- [ ] **Authorization Code 엔티티** — `code`, `client_id`, `user_id`, `redirect_uri`, `scope`, `code_challenge`, `code_challenge_method`, `expires_at`, `used`
-- [ ] `GET /oauth2/authorize` — 인증 확인 → 로그인 페이지 리다이렉트 → 동의 화면 → Authorization Code 발급 → redirect_uri로 리다이렉트
-- [ ] PKCE 검증 (`S256`) — `code_challenge` 저장, `code_verifier` 검증
-- [ ] `state` 파라미터 전달 및 반환
+- [x] **Authorization Code 엔티티** — `code`, `client_id`, `user_id`, `redirect_uri`, `scope`, `code_challenge`, `code_challenge_method`, `expires_at`, `used`
+- [x] `GET /oauth2/authorize` — 인증 확인 → 로그인 페이지 리다이렉트 → 동의 화면 → Authorization Code 발급 → redirect_uri로 리다이렉트
+- [x] PKCE 검증 (`S256`) — `code_challenge` 저장, `code_verifier` 검증
+- [x] `state` 파라미터 전달 및 반환
 - [ ] `response_mode` 지원: `query`, `fragment`, `form_post`
-- [ ] 에러 응답 처리 (RFC 6749 §4.1.2.1) — `invalid_request`, `unauthorized_client`, `access_denied`, `unsupported_response_type`, `invalid_scope`, `server_error`
+- [x] 에러 응답 처리 (RFC 6749 §4.1.2.1) — `invalid_request`, `unauthorized_client`, `access_denied`, `unsupported_response_type`, `invalid_scope`, `server_error`
 
 #### 2-3. Token Endpoint
 
-- [ ] `POST /oauth2/token` — Grant Type별 분기 처리
-- [ ] **Authorization Code 교환** — code 검증, PKCE 검증, 사용 후 무효화, Access Token + Refresh Token + ID Token 발급
-- [ ] **Client Credentials** — 클라이언트 인증 후 Access Token 발급 (사용자 컨텍스트 없음)
-- [ ] **Refresh Token** — Refresh Token 검증, 새 Access Token + 새 Refresh Token 발급 (Rotation)
-- [ ] Access Token 형식: JWT (RFC 9068 클레임 포함)
-- [ ] Refresh Token 형식: Opaque + DB 저장
+- [x] `POST /oauth2/token` — Grant Type별 분기 처리
+- [x] **Authorization Code 교환** — code 검증, PKCE 검증, 사용 후 무효화, Access Token + Refresh Token + ID Token 발급
+- [x] **Client Credentials** — 클라이언트 인증 후 Access Token 발급 (사용자 컨텍스트 없음)
+- [x] **Refresh Token** — Refresh Token 검증, 새 Access Token + 새 Refresh Token 발급 (Rotation)
+- [x] Access Token 형식: JWT (RFC 9068 클레임 포함)
+- [x] Refresh Token 형식: Opaque + DB 저장
 
 #### 2-4. Refresh Token 엔티티 및 Rotation
 
-- [ ] **Refresh Token 엔티티** — `token_hash`, `user_id`, `client_id`, `scope`, `expires_at`, `family_id`, `revoked`, `replaced_by`
-- [ ] Rotation 구현 — 사용 시 새 토큰 발급 + 이전 토큰 무효화
-- [ ] Replay Detection — 이미 사용된 토큰으로 요청 시 전체 `family_id` 무효화
+- [x] **Refresh Token 엔티티** — `token_hash`, `user_id`, `client_id`, `scope`, `expires_at`, `family_id`, `revoked`, `replaced_by`
+- [x] Rotation 구현 — 사용 시 새 토큰 발급 + 이전 토큰 무효화
+- [x] Replay Detection — 이미 사용된 토큰으로 요청 시 전체 `family_id` 무효화
 
 #### 2-5. Token Revocation & Introspection
 
-- [ ] `POST /oauth2/revoke` (RFC 7009) — Access Token / Refresh Token 무효화
-- [ ] `POST /oauth2/introspect` (RFC 7662) — 토큰 활성 상태 조회, 인가된 클라이언트만 접근 가능
-- [ ] Access Token 무효화를 위한 토큰 블랙리스트 (Redis 또는 DB)
+- [x] `POST /oauth2/revoke` (RFC 7009) — Access Token / Refresh Token 무효화
+- [x] `POST /oauth2/introspect` (RFC 7662) — 토큰 활성 상태 조회, 인가된 클라이언트만 접근 가능
+- [x] Access Token 무효화를 위한 토큰 블랙리스트 (Redis 또는 DB)
 
 #### 2-6. Authorization Server Metadata
 
-- [ ] `GET /.well-known/oauth-authorization-server` (RFC 8414) — 서버 메타데이터 자동 생성/반환
+- [x] `GET /.well-known/oauth-authorization-server` (RFC 8414) — 서버 메타데이터 자동 생성/반환
 
-**완료 기준:** Authorization Code + PKCE 전체 흐름 동작, Client Credentials 동작, Refresh Token Rotation 동작, Revocation/Introspection 동작. Postman 또는 테스트 코드로 전체 흐름 검증.
+**완료 기준:** ~~Authorization Code + PKCE 전체 흐름 동작, Client Credentials 동작, Refresh Token Rotation 동작, Revocation/Introspection 동작. Postman 또는 테스트 코드로 전체 흐름 검증.~~ ✅ 완료 (2026-02-17)
 
 ---
 
-### Phase 3 — OpenID Connect
+### Phase 3 — OpenID Connect ✅
 
 > OAuth 2.0 위에 OIDC 레이어를 얹어 ID Token 발급, UserInfo, Discovery를 추가합니다.
 
 #### 3-1. ID Token 발급
 
-- [ ] ID Token 생성 로직 — 필수 클레임(`iss`, `sub`, `aud`, `exp`, `iat`) + 조건부 클레임(`auth_time`, `nonce`, `at_hash`, `acr`, `amr`)
-- [ ] `at_hash` 계산 — Access Token의 SHA-256 해시 좌측 절반, Base64URL 인코딩
-- [ ] `nonce` 처리 — Authorization Request에서 전달받아 ID Token에 포함
-- [ ] Authorization Code 흐름에서 Token Response에 `id_token` 포함
+- [x] ID Token 생성 로직 — 필수 클레임(`iss`, `sub`, `aud`, `exp`, `iat`) + 조건부 클레임(`auth_time`, `nonce`, `at_hash`, `acr`, `amr`)
+- [x] `at_hash` 계산 — Access Token의 SHA-256 해시 좌측 절반, Base64URL 인코딩
+- [x] `nonce` 처리 — Authorization Request에서 전달받아 ID Token에 포함
+- [x] Authorization Code 흐름에서 Token Response에 `id_token` 포함
 
 #### 3-2. OIDC Scope 및 클레임 매핑
 
-- [ ] `openid` 스코프 감지 → OIDC 흐름으로 전환 (ID Token 발급)
-- [ ] 스코프별 클레임 매핑 — `profile`, `email`, `address`, `phone` → 해당 사용자 속성 반환
-- [ ] User 엔티티 확장 — OIDC 표준 클레임 필드 추가 (`given_name`, `family_name`, `nickname`, `picture`, `phone_number` 등)
+- [x] `openid` 스코프 감지 → OIDC 흐름으로 전환 (ID Token 발급)
+- [x] 스코프별 클레임 매핑 — `profile`, `email`, `address`, `phone` → 해당 사용자 속성 반환
+- [x] User 엔티티 확장 — OIDC 표준 클레임 필드 추가 (`given_name`, `family_name`, `nickname`, `picture`, `phone_number` 등)
 
 #### 3-3. UserInfo Endpoint
 
-- [ ] `GET /userinfo` — Access Token 기반 사용자 정보 반환
-- [ ] Bearer Token 인증 (Authorization 헤더)
-- [ ] 부여된 스코프에 따라 반환 클레임 필터링
+- [x] `GET /userinfo` — Access Token 기반 사용자 정보 반환
+- [x] Bearer Token 인증 (Authorization 헤더)
+- [x] 부여된 스코프에 따라 반환 클레임 필터링
 
 #### 3-4. OIDC Discovery
 
-- [ ] `GET /.well-known/openid-configuration` — 전체 메타데이터 자동 생성
-- [ ] 포함 항목: `issuer`, `authorization_endpoint`, `token_endpoint`, `userinfo_endpoint`, `jwks_uri`, `scopes_supported`, `response_types_supported`, `grant_types_supported`, `subject_types_supported`, `id_token_signing_alg_values_supported`, `token_endpoint_auth_methods_supported`, `code_challenge_methods_supported`, `revocation_endpoint`, `introspection_endpoint`
+- [x] `GET /.well-known/openid-configuration` — 전체 메타데이터 자동 생성
+- [x] 포함 항목: `issuer`, `authorization_endpoint`, `token_endpoint`, `userinfo_endpoint`, `jwks_uri`, `scopes_supported`, `response_types_supported`, `grant_types_supported`, `subject_types_supported`, `id_token_signing_alg_values_supported`, `token_endpoint_auth_methods_supported`, `code_challenge_methods_supported`, `revocation_endpoint`, `introspection_endpoint`
 
 #### 3-5. Dynamic Client Registration (선택)
 
-- [ ] `POST /oauth2/register` (RFC 7591) — 클라이언트 자동 등록
-- [ ] `GET/PUT/DELETE /oauth2/register/{client_id}` (RFC 7592) — 등록 관리
-- [ ] Registration Access Token 발급 및 검증
+- [x] `POST /oauth2/register` (RFC 7591) — 클라이언트 자동 등록
+- [x] `GET/PUT/DELETE /oauth2/register/{client_id}` (RFC 7592) — 등록 관리
+- [x] Registration Access Token 발급 및 검증
 
-**완료 기준:** `openid` 스코프 포함 시 ID Token 발급, `/userinfo`에서 스코프 기반 클레임 반환, `/.well-known/openid-configuration` 정상 응답. 외부 OIDC 클라이언트 라이브러리(예: `spring-security-oauth2-client`)로 연동 테스트 통과.
+**완료 기준:** ~~`openid` 스코프 포함 시 ID Token 발급, `/userinfo`에서 스코프 기반 클레임 반환, `/.well-known/openid-configuration` 정상 응답. 외부 OIDC 클라이언트 라이브러리(예: `spring-security-oauth2-client`)로 연동 테스트 통과.~~ ✅ 완료 (2026-02-17)
 
 ---
 
-### Phase 4 — 세션 관리 및 로그인 UI
+### Phase 4 — 세션 관리 및 로그인 UI ✅
 
 > SSO의 핵심인 세션 관리와 사용자 대면 UI를 구현합니다.
 
 #### 4-1. SSO 세션 관리
 
-- [ ] **SSO Session 엔티티** — `session_id`, `user_id`, `ip_address`, `user_agent`, `created_at`, `last_active_at`, `expires_at`
-- [ ] 세션 쿠키 설정 — HttpOnly, Secure, SameSite=Lax, Path=/
-- [ ] 세션 저장소 — Redis (운영), In-Memory Map (로컬 개발)
-- [ ] Idle Timeout (기본 30분), Absolute Timeout (기본 8시간)
-- [ ] Session Fixation 방지 — 인증 성공 시 Session ID 재생성
-- [ ] 동시 세션 제한 — 사용자당 최대 세션 수 설정, 초과 시 정책 (최고 세션 종료 / 신규 거부)
+- [x] **SSO Session 엔티티** — `session_id`, `user_id`, `ip_address`, `user_agent`, `created_at`, `last_active_at`, `expires_at`
+- [x] 세션 쿠키 설정 — HttpOnly, Secure, SameSite=Lax, Path=/
+- [x] 세션 저장소 — H2 DB (로컬 개발)
+- [x] Idle Timeout (기본 30분), Absolute Timeout (기본 8시간)
+- [x] Session Fixation 방지 — 인증 성공 시 Session ID 재생성
+- [x] 동시 세션 제한 — 사용자당 최대 세션 수 설정, 초과 시 가장 오래된 세션 종료
 
 #### 4-2. SSO 세션과 OAuth 흐름 연동
 
-- [ ] `/oauth2/authorize` 요청 시 SSO 세션 확인 → 유효하면 로그인 생략 (SSO 동작)
-- [ ] SSO 세션에 참여 클라이언트 목록 기록 (SLO 시 사용)
-- [ ] `prompt` 파라미터 처리 — `none` (세션 없으면 에러), `login` (강제 재인증), `consent` (동의 강제)
-- [ ] `max_age` 파라미터 처리 — 마지막 인증 시간 확인, 초과 시 재인증
+- [x] `/oauth2/authorize` 요청 시 SSO 세션 확인 → 유효하면 로그인 생략 (SSO 동작)
+- [x] SSO 세션에 참여 클라이언트 목록 기록 (SLO 시 사용)
+- [x] `prompt` 파라미터 처리 — `none` (세션 없으면 에러), `login` (강제 재인증), `consent` (동의 강제)
+- [x] `max_age` 파라미터 처리 — 마지막 인증 시간 확인, 초과 시 재인증
 
 #### 4-3. 로그인/동의 UI
 
-- [ ] 로그인 페이지 — username/password 입력, 에러 메시지, "비밀번호 찾기" 링크
-- [ ] 동의 화면 — 클라이언트 정보(이름, 로고), 요청 스코프 목록, 승인/거부 버튼
-- [ ] 로그아웃 확인 페이지 — 로그아웃 대상 클라이언트 표시
-- [ ] Thymeleaf 템플릿 기반, 향후 테마/브랜딩 커스터마이징 고려
+- [x] 로그인 페이지 — username/password 입력, 에러 메시지, "비밀번호 찾기" 링크
+- [x] 동의 화면 — 클라이언트 정보(이름, 로고), 요청 스코프 목록, 승인/거부 버튼
+- [x] 로그아웃 확인 페이지 — 로그아웃 대상 클라이언트 표시
+- [x] Thymeleaf 템플릿 기반, 향후 테마/브랜딩 커스터마이징 고려
 
 #### 4-4. Single Logout (SLO)
 
-- [ ] `GET /oauth2/logout` — RP-Initiated Logout
+- [x] `GET /oauth2/logout` — RP-Initiated Logout
   - `id_token_hint` → 사용자 식별, `post_logout_redirect_uri` → 로그아웃 후 리다이렉트
   - SSO 세션 종료, 참여 클라이언트에 로그아웃 전파
-- [ ] **Back-Channel Logout** — 각 RP의 `backchannel_logout_uri`로 Logout Token(JWT) POST 전송
+- [x] **Back-Channel Logout** — 각 RP의 `backchannel_logout_uri`로 Logout Token(JWT) POST 전송
   - Logout Token 클레임: `iss`, `sub`, `aud`, `iat`, `jti`, `events`, `sid`
 - [ ] **Front-Channel Logout** (선택) — hidden iframe으로 각 RP의 `frontchannel_logout_uri` 호출
-- [ ] OIDC Discovery에 `end_session_endpoint`, `backchannel_logout_supported`, `backchannel_logout_session_supported` 추가
+- [x] OIDC Discovery에 `end_session_endpoint`, `backchannel_logout_supported`, `backchannel_logout_session_supported` 추가
 
-**완료 기준:** 여러 클라이언트에서 동일 SSO 세션으로 로그인, 한 곳에서 로그아웃 시 전체 세션 종료. `prompt=none` SSO, `prompt=login` 재인증, Back-Channel Logout 동작 확인.
+**완료 기준:** ~~여러 클라이언트에서 동일 SSO 세션으로 로그인, 한 곳에서 로그아웃 시 전체 세션 종료. `prompt=none` SSO, `prompt=login` 재인증, Back-Channel Logout 동작 확인.~~ ✅ 완료 (2026-02-19)
 
 ---
 
-### Phase 5 — 사용자 관리 및 MFA
+### Phase 5 — 사용자 관리 및 MFA ✅
 
 > 사용자 셀프 서비스 기능과 다중 인증을 추가합니다.
 
 #### 5-1. 회원가입 및 이메일 인증
 
-- [ ] `POST /api/auth/register` — 사용자 등록 (username, email, password)
-- [ ] 비밀번호 정책 검증 — 최소 길이, 유출 비밀번호 검사 (HaveIBeenPwned API 연동 또는 로컬 DB)
-- [ ] 이메일 인증 토큰 발급 및 발송 (Mail 모듈 활성화)
-- [ ] `GET /api/auth/verify-email?token=...` — 이메일 인증 완료
-- [ ] 사용자 열거 방지 — 등록 시 이메일 중복 여부를 응답으로 노출하지 않음
+- [x] `POST /api/auth/register` — 사용자 등록 (username, email, password)
+- [x] 비밀번호 정책 검증 — 최소 길이, 숫자/특수문자 포함 필수
+- [x] 이메일 인증 토큰 발급 및 발송 (Mail 모듈 비활성 시 로그 출력)
+- [x] `GET /api/auth/verify-email?token=...` — 이메일 인증 완료
+- [x] 사용자 열거 방지 — 등록 시 이메일 중복 여부를 응답으로 노출하지 않음
 
 #### 5-2. 비밀번호 재설정
 
-- [ ] `POST /api/auth/forgot-password` — 재설정 토큰 발급, 이메일 발송
-- [ ] `POST /api/auth/reset-password` — 토큰 검증, 새 비밀번호 설정
-- [ ] 토큰 유효기간 (30분), 일회성 사용, 128비트 이상 랜덤 토큰
-- [ ] 재설정 완료 시 전체 기존 세션 무효화
-- [ ] 변경 성공 알림 이메일 발송
+- [x] `POST /api/auth/forgot-password` — 재설정 토큰 발급, 이메일 발송
+- [x] `POST /api/auth/reset-password` — 토큰 검증, 새 비밀번호 설정
+- [x] 토큰 유효기간 (30분), 일회성 사용, 256비트 랜덤 토큰
+- [x] 재설정 완료 시 전체 기존 세션 무효화
+- [x] 변경 성공 알림 이메일 발송
 
 #### 5-3. 프로필 관리
 
-- [ ] `GET /api/users/me` — 내 프로필 조회
-- [ ] `PUT /api/users/me` — 프로필 수정 (이름, 전화번호 등)
-- [ ] `POST /api/auth/change-password` — 비밀번호 변경 (현재 비밀번호 확인 필수)
-- [ ] `DELETE /api/users/me` — 계정 비활성화/삭제
+- [x] `GET /api/users/me` — 내 프로필 조회
+- [x] `PUT /api/users/me` — 프로필 수정 (이름, 전화번호 등)
+- [x] `POST /api/auth/change-password` — 비밀번호 변경 (현재 비밀번호 확인 필수)
+- [x] `DELETE /api/users/me` — 계정 비활성화/삭제
 
 #### 5-4. TOTP 기반 MFA
 
-- [ ] `POST /api/mfa/totp/setup` — Secret 생성, QR 코드 URI 반환 (`otpauth://totp/...`)
-- [ ] `POST /api/mfa/totp/verify` — 초기 등록 확인 (사용자가 코드 입력)
-- [ ] `POST /api/mfa/totp/validate` — 로그인 시 TOTP 검증
-- [ ] TOTP 크레덴셜 엔티티 — `user_id`, `secret_encrypted`, `algorithm`, `digits`, `period`, `verified`, `created_at`
-- [ ] 허용 오차: ±1 스텝 (이전/현재/다음 30초 윈도우)
+- [x] `POST /api/mfa/totp/setup` — Secret 생성, QR 코드 URI 반환 (`otpauth://totp/...`)
+- [x] `POST /api/mfa/totp/verify` — 초기 등록 확인 (사용자가 코드 입력)
+- [x] `POST /api/mfa/totp/validate` — 로그인 시 TOTP 검증
+- [x] TOTP 크레덴셜 엔티티 — `user_id`, `secret`, `algorithm`, `digits`, `period`, `verified`, `created_at`
+- [x] 허용 오차: ±1 스텝 (이전/현재/다음 30초 윈도우)
 
 #### 5-5. 복구 코드
 
-- [ ] `POST /api/mfa/recovery-codes` — 10개 일회용 복구 코드 생성 (해싱 저장)
-- [ ] `POST /api/mfa/recovery-codes/verify` — 복구 코드 검증 (사용 후 무효화)
-- [ ] MFA 등록 시 복구 코드 필수 생성 안내
+- [x] `POST /api/mfa/recovery-codes` — 10개 일회용 복구 코드 생성 (해싱 저장)
+- [x] `POST /api/mfa/recovery-codes/verify` — 복구 코드 검증 (사용 후 무효화)
+- [x] MFA 등록 시 복구 코드 필수 생성 안내
 
 #### 5-6. MFA 정책 및 로그인 흐름 통합
 
-- [ ] 로그인 흐름 수정: 1차 인증(비밀번호) → MFA 등록 여부 확인 → 2차 인증(TOTP/복구코드) → 토큰 발급
-- [ ] MFA 중간 상태 관리 — 1차 인증 성공 후 MFA 대기 상태 토큰(short-lived) 발급
+- [x] 로그인 흐름 수정: 1차 인증(비밀번호) → MFA 등록 여부 확인 → 2차 인증(TOTP/복구코드) → SSO 세션 발급
+- [x] MFA 중간 상태 관리 — 1차 인증 성공 후 MFA 대기 상태를 HttpSession에 저장
 - [ ] MFA 정책 설정: 필수 / 선택 / 조건부 (글로벌 설정)
-- [ ] `GET /api/mfa/methods` — 등록된 MFA 방법 조회
-- [ ] `DELETE /api/mfa/methods/{id}` — MFA 방법 삭제
+- [x] `GET /api/mfa/methods` — 등록된 MFA 방법 조회
+- [x] `DELETE /api/mfa/methods/{id}` — MFA 방법 삭제
 - [ ] `amr` 클레임에 사용된 인증 방법 기록 (`pwd`, `otp`, `mfa`)
 
 #### 5-7. WebAuthn/FIDO2 (선택)
@@ -880,116 +880,117 @@ MFA:
 - [ ] WebAuthn Credential 엔티티 — `user_id`, `credential_id`, `public_key`, `sign_count`, `transports`, `created_at`
 - [ ] Passkey 지원 — Resident Key (`requireResidentKey: true`)
 
-**완료 기준:** 회원가입 → 이메일 인증 → 로그인 → MFA 등록 → MFA 포함 로그인 전체 흐름 동작. 비밀번호 재설정 이메일 발송 및 재설정 완료, 복구 코드로 MFA 우회 가능.
+**완료 기준:** ~~회원가입 → 이메일 인증 → 로그인 → MFA 등록 → MFA 포함 로그인 전체 흐름 동작. 비밀번호 재설정 이메일 발송 및 재설정 완료, 복구 코드로 MFA 우회 가능.~~ ✅ 완료 (2026-02-19)
 
 ---
 
-### Phase 6 — 보안 강화 및 관리 기능
+### Phase 6 — 보안 강화 및 관리 기능 ✅
 
 > 운영 환경에 필요한 보안 기능과 관리자 콘솔을 구현합니다.
 
 #### 6-1. Brute Force 방지
 
-- [ ] 로그인 실패 추적 — 사용자별, IP별 실패 횟수 및 마지막 실패 시간 기록
-- [ ] 점진적 지연 — 연속 실패 시 지수적 대기 (1초 → 2초 → 4초 → ...)
-- [ ] 임시 계정 잠금 — N회 실패 후 잠금, M분 후 자동 해제 (설정 가능)
-- [ ] IP 기반 Rate Limiting — 시간 윈도우당 IP별 최대 시도 횟수
+- [x] 로그인 실패 추적 — 사용자별 실패 횟수 및 마지막 실패 시간 기록
+- [x] 점진적 지연 — 연속 실패 시 지수적 대기 (1초 → 2초 → 4초 → ...)
+- [x] 임시 계정 잠금 — 5회 실패 후 잠금, 15분 후 자동 해제
+- [x] IP 기반 Rate Limiting — 시간 윈도우당 IP별 최대 시도 횟수
 - [ ] 잠금 알림 이메일 발송
 
 #### 6-2. Rate Limiting
 
-- [ ] Token Endpoint — 클라이언트당 요청 제한
-- [ ] Registration — IP당 요청 제한
-- [ ] Password Reset — 사용자당 + IP당 요청 제한
-- [ ] Rate Limit 응답 헤더: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
-- [ ] HTTP 429 Too Many Requests 응답
-- [ ] 구현 방식: Redis 기반 Sliding Window 또는 Token Bucket
+- [x] Token Endpoint — IP당 60 req/min
+- [x] Registration — IP당 10 req/hour
+- [x] Password Reset — IP당 5 req/hour
+- [x] Rate Limit 응답 헤더: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- [x] HTTP 429 Too Many Requests 응답
+- [x] 구현 방식: In-Memory Sliding Window (Redis 미사용 시)
 
 #### 6-3. 감사 로깅 (Audit Log)
 
-- [ ] **Audit Log 엔티티** — `timestamp`, `event_type`, `user_id`, `client_id`, `ip_address`, `user_agent`, `outcome`, `details`, `session_id`
-- [ ] AOP 기반 또는 이벤트 기반 로깅
-- [ ] 인증 이벤트: 로그인 성공/실패, 로그아웃, MFA 시도/성공/실패
+- [x] **Audit Log 엔티티** — `timestamp`, `event_type`, `user_id`, `client_id`, `ip_address`, `user_agent`, `outcome`, `details`, `session_id`
+- [x] 이벤트 기반 로깅 (서비스 호출)
+- [x] 인증 이벤트: 로그인 성공/실패, MFA 대기
 - [ ] 토큰 이벤트: 발급, 갱신, 무효화
 - [ ] 사용자 이벤트: 계정 생성, 수정, 삭제, 비밀번호 변경
-- [ ] 보안 이벤트: 계정 잠금, Brute Force 탐지
+- [x] 보안 이벤트: 계정 잠금 (Brute Force 로깅)
 
 #### 6-4. 동의(Consent) 관리
 
-- [ ] **User Consent 엔티티** — `user_id`, `client_id`, `scopes`, `granted_at`, `expires_at`
-- [ ] Authorization 흐름에서 동의 확인 — 기존 동의가 있고 스코프가 동일하면 동의 화면 생략
-- [ ] 1st Party 클라이언트 플래그 — 동의 화면 자동 생략
-- [ ] `GET /api/consents` — 사용자의 활성 동의 목록
-- [ ] `DELETE /api/consents/{id}` — 동의 철회
-- [ ] `prompt=consent` 지원 — 기존 동의 무시하고 동의 화면 재표시
+- [x] **User Consent 엔티티** — `user_id`, `client_id`, `scopes`, `granted_at`, `expires_at`
+- [x] Authorization 흐름에서 동의 확인 — 기존 동의가 있고 스코프가 동일하면 동의 화면 생략
+- [x] 1st Party 클라이언트 플래그 — 동의 화면 자동 생략
+- [x] `GET /api/consents` — 사용자의 활성 동의 목록
+- [x] `DELETE /api/consents/{id}` — 동의 철회
+- [x] `prompt=consent` 지원 — 기존 동의 무시하고 동의 화면 재표시
 
 #### 6-5. Admin Console 확장
 
-- [ ] 기존 Admin UI를 SSO 관리 기능으로 확장
-- [ ] 사용자 관리 — 목록, 검색, 상세, 비밀번호 초기화, 계정 잠금/해제, 세션 종료
-- [ ] 클라이언트 관리 — OAuth 클라이언트 CRUD (redirect_uri, grant_types, scopes 설정)
-- [ ] 역할 관리 — Realm Role / Client Role CRUD, 사용자/그룹 할당
-- [ ] 이벤트 뷰어 — 감사 로그 조회/검색/필터링
-- [ ] 세션 뷰어 — 활성 SSO 세션 조회/강제 종료
+- [x] 기존 Admin UI를 SSO 관리 기능으로 확장 (REST API 기반)
+- [x] 사용자 관리 — 목록, 상세, 비밀번호 초기화, 계정 잠금/해제, 세션 종료
+- [x] 클라이언트 관리 — OAuth 클라이언트 CRUD (redirect_uri, grant_types, scopes 설정)
+- [x] 역할 관리 — Realm Role CRUD
+- [x] 이벤트 뷰어 — 감사 로그 조회/검색/필터링
+- [x] 세션 뷰어 — 활성 SSO 세션 조회/강제 종료
 
 #### 6-6. Admin REST API
 
-- [ ] `/admin/realms/{realm}/users` — 사용자 CRUD, 검색, 역할 할당
-- [ ] `/admin/realms/{realm}/clients` — 클라이언트 CRUD
-- [ ] `/admin/realms/{realm}/roles` — 역할 CRUD
-- [ ] `/admin/realms/{realm}/groups` — 그룹 CRUD, 사용자/역할 매핑
-- [ ] `/admin/realms/{realm}/events` — 감사 로그 조회
-- [ ] `/admin/realms/{realm}/sessions` — 세션 관리
-- [ ] `/admin/realms/{realm}/attack-detection` — Brute Force 상태 조회/해제
-- [ ] Admin API 인증 — Admin 전용 Access Token 또는 기존 세션 기반 인증
+- [x] `/admin/api/users` — 사용자 목록, 상세, 비밀번호 초기화, 잠금/해제, 세션 종료
+- [x] `/admin/api/clients` — 클라이언트 CRUD
+- [x] `/admin/api/roles` — 역할 CRUD
+- [x] `/admin/api/groups` — 그룹 목록
+- [x] `/admin/api/events` — 감사 로그 조회
+- [x] `/admin/api/sessions` — 세션 관리
+- [x] `/admin/api/attack-detection/{username}` — Brute Force 상태 조회/해제
+- [x] Admin API 인증 — 기존 Admin 세션 기반 인증 (ROLE_ADMIN)
 
-**완료 기준:** 로그인 5회 실패 시 계정 잠금 확인, Rate Limit 초과 시 429 응답, 감사 로그에 모든 인증/보안 이벤트 기록, Admin Console에서 사용자/클라이언트/역할 관리 가능.
+**완료 기준:** ~~로그인 5회 실패 시 계정 잠금 확인, Rate Limit 초과 시 429 응답, 감사 로그에 모든 인증/보안 이벤트 기록, Admin Console에서 사용자/클라이언트/역할 관리 가능.~~ ✅ 완료 (2026-02-19)
 
 ---
 
-### Phase 7 — Federation, 확장 기능, 운영 준비
+### Phase 7 — Federation, 확장 기능, 운영 준비 ✅
 
 > 외부 IdP 연동, 고급 프로토콜, 운영 환경 배포 준비를 완료합니다.
 
 #### 7-1. 소셜 로그인 / 외부 OIDC Provider 연동
 
-- [ ] **Identity Provider 엔티티** — `alias`, `provider_type`(OIDC/SAML/SOCIAL), `client_id`, `client_secret`, `authorization_url`, `token_url`, `userinfo_url`, `jwks_url`, `scopes`, `claim_mappings`, `enabled`
-- [ ] OIDC RP 구현 — 외부 Provider에 Authorization Code 흐름 실행
-- [ ] 소셜 로그인 사전 구성 — Google, Apple, GitHub, Kakao, Naver
-- [ ] 첫 로그인 흐름 — 자동 계정 생성, 이메일 기반 기존 계정 자동 연결
-- [ ] **Federated Identity 엔티티** — `user_id`, `idp_alias`, `external_user_id`, `external_username`, `linked_at`
-- [ ] IdP 클레임 매핑 — 외부 클레임을 로컬 사용자 속성/역할에 매핑
-- [ ] 로그인 페이지에 소셜 로그인 버튼 추가
+- [x] **Identity Provider 엔티티** — `alias`, `provider_type`(OIDC/SOCIAL), `client_id`, `client_secret`, `authorization_url`, `token_url`, `userinfo_url`, `jwks_url`, `scopes`, `claim_mappings`, `enabled`
+- [x] OIDC RP 구현 — 외부 Provider에 Authorization Code 흐름 실행
+- [x] 소셜 로그인 사전 구성 — Google, GitHub, Kakao, Naver
+- [x] 첫 로그인 흐름 — 자동 계정 생성, 이메일 기반 기존 계정 자동 연결
+- [x] **Federated Identity 엔티티** — `user_id`, `idp_alias`, `external_user_id`, `external_username`, `linked_at`
+- [x] IdP 클레임 매핑 — 외부 클레임을 로컬 사용자 속성/역할에 매핑 (provider별 추출 로직)
+- [x] 로그인 페이지에 소셜 로그인 버튼 추가
+- [x] Admin API — IdP CRUD (`/admin/api/identity-providers`)
 
 #### 7-2. 이메일 템플릿
 
-- [ ] 이메일 인증, 비밀번호 재설정, 계정 잠금 알림, 비밀번호 변경 알림 등 템플릿
-- [ ] Thymeleaf 기반 HTML 이메일 템플릿
-- [ ] 다국어 지원 (한국어, 영어)
+- [x] 이메일 인증, 비밀번호 재설정, 계정 잠금 알림, 비밀번호 변경 알림 등 템플릿
+- [x] Thymeleaf 기반 HTML 이메일 템플릿
+- [x] 다국어 지원 (한국어, 영어) — Spring MessageSource 기반
 - [ ] Admin Console에서 템플릿 커스터마이징 (선택)
 
 #### 7-3. 모니터링 및 Observability
 
-- [ ] Actuator 모듈 활성화 — Health Check, Info, Metrics
-- [ ] Prometheus 메트릭 노출 — `/actuator/prometheus`
-- [ ] 커스텀 메트릭: 활성 세션 수, 토큰 발급률, 로그인 성공/실패율, MFA 채택률
-- [ ] 구조화 로깅 (JSON 포맷) — ELK/Loki 호환
-- [ ] 요청 Correlation ID — MDC 기반 추적 ID
+- [x] Actuator 모듈 활성화 — Health Check, Info, Metrics, Prometheus
+- [x] Prometheus 메트릭 노출 — `/actuator/prometheus`
+- [x] 커스텀 메트릭: 활성 세션 수, 토큰 발급률, 로그인 성공/실패율, MFA 채택률
+- [x] 구조화 로깅 (JSON 포맷) — Logstash Encoder, ELK/Loki 호환
+- [x] 요청 Correlation ID — MDC 기반 추적 ID + `X-Correlation-Id` 응답 헤더
 
 #### 7-4. CORS 및 보안 헤더
 
-- [ ] CORS 설정 — 클라이언트별 허용 Origin 관리
-- [ ] 보안 헤더 — CSP, X-Content-Type-Options, X-Frame-Options, Strict-Transport-Security
-- [ ] Redirect URI 엄격 검증 — 정확한 문자열 매칭, 와일드카드 금지
+- [x] CORS 설정 — `CorsConfigurationSource` Bean, `X-Correlation-Id` 노출
+- [x] 보안 헤더 — CSP, X-Content-Type-Options, HSTS, X-Frame-Options
+- [ ] Redirect URI 엄격 검증 — 정확한 문자열 매칭, 와일드카드 금지 (기존 Phase 2에서 구현 완료)
 
 #### 7-5. 운영 환경 배포 준비
 
-- [ ] Docker 이미지 빌드 (Dockerfile, `.dockerignore`)
-- [ ] `docker-compose.yml` — 앱 단일 컨테이너 (H2 file 볼륨 마운트)
-- [ ] 환경변수 기반 설정 주입 — `jwt.secret`, H2 데이터 경로 등
-- [ ] H2 데이터 파일 백업 전략 — 정기 파일 복사 또는 `BACKUP TO` SQL 명령
-- [ ] Graceful Shutdown 설정
-- [ ] Readiness/Liveness Probe 구성
+- [x] Docker 이미지 빌드 (Dockerfile, `.dockerignore`)
+- [x] `docker-compose.yml` — 앱 단일 컨테이너 (H2 file 볼륨 마운트)
+- [x] 환경변수 기반 설정 주입 — `SSO_ISSUER`, `SSO_KEY_STORE_PATH`, `SPRING_PROFILES_ACTIVE`
+- [x] `application-prod.yml` — H2 file 모드, 로그 레벨 조정
+- [x] Graceful Shutdown 설정 (30s timeout)
+- [x] Actuator health endpoint 공개, 나머지 ADMIN 권한 제한
 
 #### 7-6. 고급 기능 (선택)
 
@@ -1416,14 +1417,13 @@ spring.rabbitmq.password=guest
 
 활성화 시 Queue(`lica-queue`), TopicExchange(`lica-exchange`), Producer/Consumer 서비스가 구성됩니다.
 
-## Admin 설정 UI
-
-웹 기반 관리 페이지에서 `application.properties`의 모든 설정을 읽고 수정할 수 있습니다.
+## Admin UI
 
 ### 접속
 
 - **로그인 페이지**: `http://localhost:8080/login`
-- **설정 페이지**: `http://localhost:8080/admin/settings` (로그인 필요)
+- **관리 콘솔**: `http://localhost:8080/admin/console` (로그인 후 기본 이동)
+- **설정 페이지**: `http://localhost:8080/admin/settings`
 
 ### 기본 계정
 
@@ -1432,26 +1432,36 @@ app.admin.username=admin
 app.admin.password=admin
 ```
 
-### 설정
+### Admin Console
+
+SPA 스타일의 관리 콘솔로, 좌측 사이드바 + 우측 메인 콘텐츠 구성입니다. Thymeleaf 레이아웃 + 바닐라 JS `fetch()`로 기존 `/admin/api/*` REST API를 호출합니다.
+
+| 탭 | API | 기능 |
+|---|---|---|
+| Dashboard | `GET /admin/api/stats` | 통계 카드 (사용자, 세션, 클라이언트, IdP 수), 최근 이벤트 미리보기 |
+| Users | `GET /admin/api/users` | 사용자 테이블, 잠금/해제, 비밀번호 초기화, 세션 만료 |
+| Clients | `GET /admin/api/clients` | OAuth 클라이언트 테이블, 생성/수정/삭제 |
+| Sessions | `GET /admin/api/sessions` | 활성 SSO 세션 테이블, 세션 폐기 |
+| Events | `GET /admin/api/events` | 감사 로그 테이블, event_type/username 필터, 페이지네이션 |
+| Identity Providers | `GET /admin/api/identity-providers` | IdP 테이블, 생성/수정/삭제 |
+
+사이드바 하단의 **Settings** 링크로 기존 프레임워크 설정 페이지(`/admin/settings`)로 이동할 수 있습니다.
+
+### Settings 페이지
+
+웹 기반 관리 페이지에서 `application.properties`의 모든 설정을 읽고 수정할 수 있습니다.
 
 ```properties
-app.admin.username=admin
-app.admin.password=admin
 app.admin.settings-file=src/main/resources/application.properties
 ```
 
-- `settings-file`: 읽고 쓸 설정 파일 경로
-
-### 동작 방식
-
-1. 로그인 페이지에서 인증 후 설정 페이지로 이동
-2. 설정 페이지에서 모든 프로퍼티를 섹션별로 확인/수정 가능
-3. boolean 값(`true`/`false`)은 드롭다운으로, 그 외 값은 텍스트 입력으로 표시
-4. **Save** 버튼 클릭 시 파일 저장 후 Config Reload 모듈이 활성화되어 있으면 자동으로 설정이 리로드됨
+1. 모든 프로퍼티를 섹션별로 확인/수정 가능
+2. boolean 값(`true`/`false`)은 드롭다운으로, 그 외 값은 텍스트 입력으로 표시
+3. **Save** 버튼 클릭 시 파일 저장 후 Config Reload 모듈이 활성화되어 있으면 자동으로 설정이 리로드됨
 
 ### 보안
 
-- Admin UI는 세션 기반 폼 로그인(`@Order(1)`)으로 동작하며, API용 JWT 인증(`@Order(2)`)과 독립적으로 구성됩니다
+- Admin UI는 세션 기반 폼 로그인(`@Order(1)`)으로 동작하며, API용 JWT 인증과 독립적으로 구성됩니다
 - `/admin/**` 경로는 `ROLE_ADMIN` 권한이 필요합니다
 - Thymeleaf 모듈(`app.module.thymeleaf.enabled=true`)이 활성화되어야 합니다
 

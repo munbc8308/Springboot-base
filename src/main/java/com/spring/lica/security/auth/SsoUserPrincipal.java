@@ -17,6 +17,7 @@ public class SsoUserPrincipal implements UserDetails {
     private final String password;
     private final boolean enabled;
     private final boolean emailVerified;
+    private final boolean mfaEnabled;
     private final Set<? extends GrantedAuthority> authorities;
 
     public SsoUserPrincipal(User user, Set<? extends GrantedAuthority> authorities) {
@@ -26,6 +27,7 @@ public class SsoUserPrincipal implements UserDetails {
         this.password = user.getPasswordHash();
         this.enabled = user.isEnabled();
         this.emailVerified = user.isEmailVerified();
+        this.mfaEnabled = user.isMfaEnabled();
         this.authorities = authorities;
     }
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Login - Lica SSO</title>
+	<link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+	<div class="login-wrapper">
+		<div class="login-card">
+			<h1>Lica SSO</h1>
+			<p class="subtitle">Sign in to continue</p>
+
+			<div th:if="${param.error}" class="alert alert-error">
+				<span th:if="${param.error[0] == 'login_required'}">Login is required to proceed.</span>
+				<span th:if="${param.error[0] == 'locked'}">Account is locked. Please contact support.</span>
+				<span th:if="${param.error[0] == 'disabled'}">Account is disabled.</span>
+				<span th:unless="${param.error[0] == 'login_required' or param.error[0] == 'locked' or param.error[0] == 'disabled'}">Invalid username or password.</span>
+			</div>
+			<div th:if="${param.logout}" class="alert alert-info">
+				You have been logged out.
+			</div>
+			<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+			<form th:action="@{/oauth2/login}" method="post">
+				<div class="form-group">
+					<label for="username">Username</label>
+					<input type="text" id="username" name="username" autofocus="autofocus" required="required"/>
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" required="required"/>
+				</div>
+				<button type="submit" class="btn-primary">Login</button>
+			</form>
+
+			<div style="margin-top: 1em; text-align: center;">
+				<a href="#" style="color: #6c757d; font-size: 0.9em;">Forgot password?</a>
+			</div>
+
+			<div th:if="${not #lists.isEmpty(identityProviders)}" style="margin-top: 1.5em;">
+				<div style="text-align: center; color: #6c757d; font-size: 0.85em; margin-bottom: 1em;">
+					<span style="display: inline-block; width: 30%; border-bottom: 1px solid #dee2e6; vertical-align: middle;"></span>
+					<span style="padding: 0 0.5em;">OR</span>
+					<span style="display: inline-block; width: 30%; border-bottom: 1px solid #dee2e6; vertical-align: middle;"></span>
+				</div>
+				<div th:each="idp : ${identityProviders}">
+					<a th:href="@{/oauth2/federation/{alias}(alias=${idp.alias})}"
+					   class="btn-social"
+					   style="display: block; text-align: center; padding: 0.6em; margin-bottom: 0.5em;
+					          border: 1px solid #dee2e6; border-radius: 4px; text-decoration: none; color: #333;">
+						<span th:text="'Sign in with ' + ${idp.alias}">Sign in with Provider</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
