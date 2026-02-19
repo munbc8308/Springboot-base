@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title th:text="${title} + ' - Lica SSO'">Message - Lica SSO</title>
+	<link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+	<div class="login-wrapper">
+		<div class="login-card" style="text-align:center;">
+			<h1>Lica SSO</h1>
+
+			<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+			<div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+			<h2 th:text="${title}" style="font-size:20px; font-weight:600; margin: 20px 0 8px;"></h2>
+
+			<div th:if="${linkUrl}" style="margin-top: 24px;">
+				<a th:href="${linkUrl}" class="btn-primary" style="display:inline-block; padding:12px 32px; text-decoration:none; border-radius:8px;" th:text="${linkText}">Continue</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

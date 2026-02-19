@@ -551,8 +551,17 @@ OAuth 2.0 / OIDC 프로토콜:
   GET  /userinfo
   GET  /oauth2/logout
 
-사용자 인증/계정:
-  POST /api/auth/login
+사용자 인증/계정 (UI):
+  GET  /oauth2/login                  # 로그인 페이지
+  GET  /oauth2/register               # 회원가입 페이지
+  POST /oauth2/register               # 회원가입 처리
+  GET  /oauth2/forgot-password         # 비밀번호 찾기 페이지
+  POST /oauth2/forgot-password         # 비밀번호 찾기 처리
+  GET  /oauth2/reset-password?token=   # 비밀번호 초기화 페이지
+  POST /oauth2/reset-password          # 비밀번호 초기화 처리
+  GET  /oauth2/verify-email?token=     # 이메일 인증 처리 + 결과 페이지
+
+사용자 인증/계정 (API):
   POST /api/auth/register
   GET  /api/auth/verify-email
   POST /api/auth/forgot-password
@@ -581,15 +590,28 @@ MFA:
   GET    /api/sessions
   DELETE /api/sessions/{id}
 
-관리자:
-  /admin/realms/**
-  /admin/realms/{realm}/users/**
-  /admin/realms/{realm}/groups/**
-  /admin/realms/{realm}/roles/**
-  /admin/realms/{realm}/clients/**
-  /admin/realms/{realm}/identity-provider/**
-  /admin/realms/{realm}/authentication/**
-  /admin/realms/{realm}/events/**
+관리자 (UI):
+  GET  /admin/console                  # 관리 콘솔 (대시보드, 사용자, 클라이언트, 세션, 이벤트, IdP)
+  GET  /admin/settings                 # 프레임워크 설정
+
+관리자 (API):
+  GET  /admin/api/stats                # 대시보드 통계
+  GET  /admin/api/users                # 사용자 목록
+  POST /admin/api/users/{id}/lock      # 사용자 잠금
+  POST /admin/api/users/{id}/unlock    # 사용자 해제
+  POST /admin/api/users/{id}/reset-password  # 비밀번호 초기화
+  POST /admin/api/users/{id}/revoke-sessions # 세션 만료
+  GET  /admin/api/clients              # 클라이언트 목록
+  POST /admin/api/clients              # 클라이언트 생성
+  PUT  /admin/api/clients/{id}         # 클라이언트 수정
+  DELETE /admin/api/clients/{id}       # 클라이언트 삭제
+  GET  /admin/api/sessions             # 활성 세션 목록
+  POST /admin/api/sessions/{id}/revoke # 세션 폐기
+  GET  /admin/api/events               # 감사 로그
+  GET  /admin/api/identity-providers   # IdP 목록
+  POST /admin/api/identity-providers   # IdP 생성
+  PUT  /admin/api/identity-providers/{id}    # IdP 수정
+  DELETE /admin/api/identity-providers/{id}  # IdP 삭제
 
 모니터링:
   GET /actuator/health
